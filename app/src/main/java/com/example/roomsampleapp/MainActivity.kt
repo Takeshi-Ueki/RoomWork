@@ -2,7 +2,6 @@ package com.example.roomsampleapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings.Global
 import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -20,16 +19,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        this.db = Room.databaseBuilder(
-            this,
-            AppDatabase::class.java,
-            "memo.db"
-        ).build()
+        // データベースのインスタンスを初期化
+        this.db = Room.databaseBuilder(this, AppDatabase::class.java, "memo.db").build()
+        // DAOを取得
         this.dao = this.db.memoDao()
 
         setContentView(R.layout.activity_main)
-        findViewById<Button>(R.id.button).setOnClickListener{
+
+        // ボタンが押されたときの処理
+        findViewById<Button>(R.id.button).setOnClickListener {
             GlobalScope.launch {
+
                 withContext(Dispatchers.IO) {
                     val memo = Memo(id = 0, memo = "Test Memo")
                     dao.insert(memo)
